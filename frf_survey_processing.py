@@ -25,7 +25,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
-fh = logging.FileHandler(r"\\coe-samgsp01mob\gis\Work\_C045\Scripts\survey_data_scheduled_task\logs\frf_survey_processing.log")
+fh = logging.FileHandler(r"C:\\Temp\\arcGIS_testing\\Code\\logs\\frf_survey_processing.log")
 fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 logger.addHandler(fh)
@@ -294,22 +294,22 @@ def delete_old_survey_grid(surveyjobidfk, filename):
         sys.exit()
 
 
-def test_url(url):
-    """
-    Test if url is online, 3 attempts are made to reach url.
-    :param url: url to test
-    :return: boolean, True if online
-    """
-    attempts = 0
-    success = False
-    while attempts < 3 and not success:
-        try:
-            urllib2.urlopen(url)
-            success = True
-            return success
-        except:
-            attempts += 1
-            return success
+# def test_url(url):
+#     """
+#     Test if url is online, 3 attempts are made to reach url.
+#     :param url: url to test
+#     :return: boolean, True if online
+#     """
+#     attempts = 0
+#     success = False
+#     while attempts < 3 and not success:
+#         try:
+#             urllib2.urlopen(url)
+#             success = True
+#             return success
+#         except:
+#             attempts += 1
+#             return success
 
 
 def load_text(filepath, skip_header=0):
@@ -1003,14 +1003,14 @@ if __name__ == "__main__":
     survey_grid_archive = "SPNCM_SURVEY_GRID_ARCHIVE"
     mosaic_dataset = "WGS84_SURVEY_GRID"
     tds_url = 'https://chlthredds.erdc.dren.mil/thredds/catalog/frf/survey_temp/catalog.xml'
-    out_folder = r'\\coe-samgsp01mob\gis\Work\_C045\Scripts\survey_data_scheduled_task\downloaded_files'
+    out_folder = r'C:\\Temp\\arcGIS_testing\\Code\\downloaded_files'
 
-    # processing_folder = out_folder
-    processing_folder = download_data_tds(tds_url, out_folder)
+    processing_folder = out_folder
+    #processing_folder = download_data_tds(tds_url, out_folder)
     process_data(processing_folder)
     toc = timeit.default_timer()
     email_alert()
     logging.info('STATS: elapsed time: {0} seconds'.format(round(toc - tic, 2)))
-    logging.info('STATS: {0} metadata files processed'.format(str(metadata_counter)))_al
+    logging.info('STATS: {0} metadata files processed'.format(str(metadata_counter)))
     logging.info('STATS: {0} surveys processed'.format(str(survey_counter)))
     logging.info("="*50)
