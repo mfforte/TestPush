@@ -36,50 +36,50 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-def download_data_tds(tds_url, out_folder):
-    """
-    Downloads FRF survey data from the CHL THREDDS server, skipping files that already exist in out_folder
-    https://chlthredds.erdc.dren.mil/thredds/catalog/frf/survey_temp/catalog.xml
-    :param tds_url: chl thredds server url
-    :param out_folder: path to save files
-    :return: path to downloaded files
-    """
-    try:
-        if not test_url(tds_url):
-            logging.error("ERROR: {0} - THREDDS Server Down".format(tds_url))
-            logging.info("="*50)
-            sys.exit()
-        # Path to THREDDS server with catalog.xml
-        xmlFile = urllib.urlopen(tds_url).read()
-        xmldoc = minidom.parseString(xmlFile)
-
-        # Get all the files available in this directory
-        datasets = xmldoc.getElementsByTagName("dataset")
-        existing_files = os.listdir("{0}".format(out_folder))
-
-        # loop through each dataset in the xml file.  Reading its name, check if that file has
-        # already been downloaded to the designated location.
-        for dataset in datasets:
-            if dataset.hasAttribute("name"):
-                filename = dataset.getAttribute("name")
-                if filename == "survey_temp":
-                    continue
-                dataset_name = dataset.getAttribute("name")
-                download_url = 'https://chlthredds.erdc.dren.mil/thredds/fileServer/frf/survey_temp/{0}'.format(
-                        dataset.getAttribute("name"))
-                filepath = os.path.join(out_folder, dataset_name)
-                searchCounter = 0
-                for offlineFileName in existing_files:
-                    if dataset_name == offlineFileName:
-                        searchCounter += 1
-                        logging.info("{0} already downloaded.".format(dataset_name))
-                if searchCounter == 0:
-                    logging.info('INFO: {0} - downloading file...'.format(dataset_name))
-                    urllib.urlretrieve(download_url, filepath)
-        return out_folder
-    except Exception as e:
-        logging.exception(e)
-        email_alert_error(e.message)
+# def download_data_tds(tds_url, out_folder):
+#     """
+#     Downloads FRF survey data from the CHL THREDDS server, skipping files that already exist in out_folder
+#     https://chlthredds.erdc.dren.mil/thredds/catalog/frf/survey_temp/catalog.xml
+#     :param tds_url: chl thredds server url
+#     :param out_folder: path to save files
+#     :return: path to downloaded files
+#     """
+#     try:
+#         if not test_url(tds_url):
+#             logging.error("ERROR: {0} - THREDDS Server Down".format(tds_url))
+#             logging.info("="*50)
+#             sys.exit()
+#         # Path to THREDDS server with catalog.xml
+#         xmlFile = urllib.urlopen(tds_url).read()
+#         xmldoc = minidom.parseString(xmlFile)
+#
+#         # Get all the files available in this directory
+#         datasets = xmldoc.getElementsByTagName("dataset")
+#         existing_files = os.listdir("{0}".format(out_folder))
+#
+#         # loop through each dataset in the xml file.  Reading its name, check if that file has
+#         # already been downloaded to the designated location.
+#         for dataset in datasets:
+#             if dataset.hasAttribute("name"):
+#                 filename = dataset.getAttribute("name")
+#                 if filename == "survey_temp":
+#                     continue
+#                 dataset_name = dataset.getAttribute("name")
+#                 download_url = 'https://chlthredds.erdc.dren.mil/thredds/fileServer/frf/survey_temp/{0}'.format(
+#                         dataset.getAttribute("name"))
+#                 filepath = os.path.join(out_folder, dataset_name)
+#                 searchCounter = 0
+#                 for offlineFileName in existing_files:
+#                     if dataset_name == offlineFileName:
+#                         searchCounter += 1
+#                         logging.info("{0} already downloaded.".format(dataset_name))
+#                 if searchCounter == 0:
+#                     logging.info('INFO: {0} - downloading file...'.format(dataset_name))
+#                     urllib.urlretrieve(download_url, filepath)
+#         return out_folder
+#     except Exception as e:
+#         logging.exception(e)
+#         email_alert_error(e.message)
 
 
 def process_data(folder):
@@ -993,7 +993,7 @@ if __name__ == "__main__":
     arcpy.env.autoCommit = 5000
     # development db
     # arcpy.env.workspace = r"\\coe-samgsp01mob\gis\Work\_C045\Scripts\survey_data_scheduled_task\development_db\FRF.gdb"
-    arcpy.env.workspace = r"\\coe-samgsp01mob\GIS\Tools\SDE\administrator\RedDragon_COE_GEO_FRFD.sde"
+    arcpy.env.workspace = r"C:\\Temp\\arcGIS_testing\\FRF_test.gdb"
     survey_point_table = "SurveyPoint"
     survey_job_table = "SurveyJob"
     import_archive_table = "FRFImportArchive"
